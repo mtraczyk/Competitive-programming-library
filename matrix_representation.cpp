@@ -2,6 +2,8 @@
 
 #include <bits/stdc++.h>
 
+using namespace std;
+
 typedef long long ll;
 const int M = 1e6 + 7;
 const ll q = 7057594037927903;
@@ -52,7 +54,7 @@ struct matrix {
     }
 };
 
-//If you want it to work for non square matrices, you have to allocate the required memory.
+//If you want it to work for non square matrices, you have to allocate a required memory.
 inline matrix operator*(const matrix &a, const matrix &b) {
     matrix c = matrix(a.numberOfRows, b.numberOfColumns);
 
@@ -66,3 +68,4 @@ inline matrix operator*(const matrix &a, const matrix &b) {
 
     return c;
 }
+
