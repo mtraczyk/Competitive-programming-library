@@ -14,7 +14,7 @@ const ll prime=2137;
 #define s second
 #define ios ios_base::sync_with_stdio(0)
 
-ll fast_pow(ll basis, ll exponent, ll modulo) {
+ll fastPow(ll basis, ll exponent, ll modulo) {
 	ll result = 1LL, aux = basis; 
 	
 	while(exponent != 0LL) {
@@ -30,57 +30,60 @@ ll fast_pow(ll basis, ll exponent, ll modulo) {
 	return result;
 }
 
-void make_giant_step(ll basis, ll modulo, vector <pair <ll, ll> > &giant_step) {
-	ll step = sqrt(modulo), actual_step = 1LL, aux = 0LL;
-	ll number_of_steps = modulo / step + 1LL;
-	ll value_of_step = fast_pow(basis, step, modulo);
-	giant_step.pb({actual_step, aux});
+void makeGiantStep(ll basis, ll modulo, vector <pair <ll, ll> > &giantStep) {
+	ll step = sqrt(modulo), actualStep = 1LL, aux = 0LL;
+	ll numberOfSteps = modulo / step + 1LL;
+	ll valueOfStep = fastPow(basis, step, modulo);
+	giantStep.pb({actualStep, aux});
 	
-	for(ll i = 1LL; i <= number_of_steps; i++) {
-		actual_step = (actual_step * value_of_step) % modulo;
+	for(ll i = 1LL; i <= numberOfSteps; i++) {
+		actualStep = (actualStep * valueOfStep) % modulo;
 		aux += step;
-		giant_step.pb({actual_step, aux});
+		aux = aux % (modulo - 1LL);
+		giantStep.pb({actualStep, aux});
 	}
 }
 
-void make_baby_step(ll basis, ll number, ll modulo, vector <pair <ll, ll> > &baby_step) {
-	ll number_of_steps = sqrt(modulo) + 1LL, aux = 0LL;
-	ll value_of_step = basis, actual_step = number;
-	baby_step.pb({actual_step, aux});
+void makeBabyStep(ll basis, ll number, ll modulo, vector <pair <ll, ll> > &babyStep) {
+	ll numberOfSteps = sqrt(modulo) + 1LL, aux = 0LL;
+	ll valueOfStep = basis, actualStep = number;
+	babyStep.pb({actualStep, aux});
 	
-	for(ll i = 1LL; i <= number_of_steps; i++) {
-		actual_step = (actual_step * value_of_step) % modulo;
+	for(ll i = 1LL; i <= numberOfSteps; i++) {
+		actualStep = (actualStep * valueOfStep) % modulo;
 		aux++;
-		baby_step.pb({actual_step, aux});
+		aux = aux % (modulo - 1LL);
+		babyStep.pb({actualStep, aux});
 	}
 }
 
-//I assume that an answer exists. REMEMBER that there might not be one.
-ll discrete_logarithm(ll basis, ll number, ll modulo) {
-	int act_position = 0, act_position2 = 0;
+//I assume that modulo is a prime number, therefore if a basis is a generator
+//mod modulo then there is an answer.
+ll discreteLogarithm(ll basis, ll number, ll modulo) {
+	int actPosition = 0, actPosition2 = 0;
 	ll ans = 0LL; 
-	vector <pair <ll, ll> >giant_step, baby_step;
+	vector <pair <ll, ll> >giantStep, babyStep;
 	
-	make_giant_step(basis, modulo, giant_step);
-	make_baby_step(basis, number, modulo, baby_step);
+	makeGiantStep(basis, modulo, giantStep);
+	makeBabyStep(basis, number, modulo, babyStep);
 	
-	sort(giant_step.begin(), giant_step.end());
-	sort(baby_step.begin(), baby_step.end());
+	sort(giantStep.begin(), giantStep.end());
+	sort(babyStep.begin(), babyStep.end());
 	
 	do {
-		while(giant_step[act_position].f < baby_step[act_position2].f) {
-			act_position++;
+		while(giantStep[actPosition].f < babyStep[actPosition2].f) {
+			actPosition++;
 		}
 		
-		while(giant_step[act_position].f > baby_step[act_position2].f) {
-			act_position2++;
+		while(giantStep[actPosition].f > babyStep[actPosition2].f) {
+			actPosition2++;
 		}
 		
-		if(giant_step[act_position].f == baby_step[act_position2].f) {
-			ans = giant_step[act_position].s - baby_step[act_position2].s;
+		if(giantStep[actPosition].f == babyStep[actPosition2].f) {
+			ans = giantStep[actPosition].s - babyStep[actPosition2].s;
 		}
 		
-	} while(giant_step[act_position].f != baby_step[act_position2].f);
+	} while(giantStep[actPosition].f != babyStep[actPosition2].f);
 	
-	return (ans % modulo + modulo) % modulo;
+	return (ans % (modulo - 1LL) + modulo - 1LL) % (modulo - 1LL);
 }
