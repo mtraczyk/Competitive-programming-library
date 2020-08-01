@@ -54,7 +54,7 @@ struct matrix {
     }
 };
 
-//If you want it to work for non square matrices, you have to allocate a required memory.
+// If you want it to work for non square matrices, you have to allocate a required memory.
 inline matrix operator*(const matrix &a, const matrix &b) {
     matrix c = matrix(a.numberOfRows, b.numberOfColumns);
 
