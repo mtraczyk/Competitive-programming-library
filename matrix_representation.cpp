@@ -69,3 +69,6 @@ inline matrix operator*(const matrix &a, const matrix &b) {
     return c;
 }
 
+int main() {
+    return 0;
+}
